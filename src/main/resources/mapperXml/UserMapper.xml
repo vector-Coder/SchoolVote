@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.jxau.dbn.dao.mapper.UserMapper">
+    <!--    时间的resultMap-->
+    <resultMap id="BaseTimeResultMap" type="User">
+        <result property="lineInsertTime" column="line_insert_time"/>
+        <result property="lineUpdateTime" column="line_update_time"/>
+    </resultMap>
+
+    <!--    教室上课情况的映射-->
+    <resultMap id="BaseResultMap" type="User" extends="BaseTimeResultMap">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userClass" column="user_class"/>
+        <result property="userVoteCount" column="user_vote_count"/>
+        <result property="userHasVoteCount" column="user_has_vote_count"/>
+        <result property="userLoginIp" column="user_login_ip"/>
+        <result property="userType" column="user_type"/>
+    </resultMap>
+
+    <sql id="where_sql">
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_user
+        <include refid="where_sql"/>
+    </select>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE
+        FROM sc_user
+        <include refid="where_sql"/>
+    </delete>
+
+    <update id="updateById" parameterType="long">
+        UPDATE sc_user
+        <set>
+            <if test="userLoginIp != null">
+                user_login_ip = #{userLoginIp} ,
+            </if>
+            <if test="userVoteCount != null">
+                user_vote_count = user_vote_count +  #{userVoteCount} ,
+            </if>
+            <if test="userHasVoteCount != null">
+                user_has_vote_count =  user_has_vote_count +  #{userHasVoteCount} ,
+            </if>
+        </set>
+        <include refid="where_sql"/>
+    </update>
+
+
+    <insert id="insertNewData" parameterType="User">
+        INSERT INTO sc_user (user_id, user_name, user_class, user_login_ip, user_type, user_vote_count,
+                             line_insert_time,
+                             line_update_time)
+        VALUES (#{userId}, #{userName}, #{userClass}, #{userLoginIp}, #{userType}, #{userVoteCount}, #{lineInsertTime},
+                #{lineUpdateTime})
+    </insert>
+
+    <select id="findAllData" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_user
+    </select>
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.jxau.dbn.dao.mapper.IPMapper">
+    <!--    时间的resultMap-->
+    <resultMap id="BaseTimeResultMap" type="User">
+        <result property="lineInsertTime" column="line_insert_time" />
+        <result property="lineUpdateTime" column="line_update_time"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="IP">
+        <id property="ipId" column="ip_id"/>
+        <result property="ipUseCount" column="ip_use_count" />
+    </resultMap>
+
+    <sql id="where_sql">
+        <where>
+            <if test="ipId != null">
+                ip_id = #{ipId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findById" parameterType="string" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_ip_count
+        <include refid="where_sql"/>
+    </select>
+
+    <delete id="deleteById" parameterType="string">
+        DELETE
+        FROM bu_ip_count
+        <include refid="where_sql"/>
+    </delete>
+
+    <update id="updateById" parameterType="string">
+        UPDATE bu_ip_count
+        <set>
+            <if test="ipUseCount != null">
+                ip_use_count = #{ipUseCount} + ip_use_count
+            </if>
+        </set>
+        <include refid="where_sql"/>
+    </update>
+
+
+    <insert id="insertNewData" parameterType="IP">
+        INSERT INTO bu_ip_count (ip_id, line_insert_time, line_update_time)
+        VALUES (#{ipId}, #{lineInsertTime}, #{lineUpdateTime})
+    </insert>
+
+    <select id="findAllData" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_ip_count
+    </select>
+</mapper>

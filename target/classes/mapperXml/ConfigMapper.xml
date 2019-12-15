@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.jxau.dbn.dao.mapper.ConfigMapper">
+    <!--    时间的resultMap-->
+    <resultMap id="BaseTimeResultMap" type="Config">
+        <result property="lineInsertTime" column="line_insert_time"/>
+        <result property="lineUpdateTime" column="line_update_time"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="Config">
+        <id property="configId" column="config_id"/>
+        <result property="configTitle" column="config_title"/>
+        <result property="configIntroduce" column="config_introduce"/>
+        <result property="configUrlImg" column="config_img_url"/>
+        <result property="configMaxVoteCount" column="config_max_vote_count"/>
+        <result property="configMinVoteCount" column="config_min_vote_count"/>
+        <result property="configMaxVoteLimit" column="config_max_vote_limit"/>
+        <result property="configMaxIPUseCount" column="config_max_ip_use_count"/>
+    </resultMap>
+
+
+    <sql id="where_sql">
+        <where>
+            <if test="configId != null">
+                config_id = #{configId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_config
+        <include refid="where_sql"/>
+    </select>
+
+
+    <update id="updateById" parameterType="config">
+        UPDATE sc_config
+        <set>
+            <if test="configTitle != null">
+                config_title = #{configTitle},
+            </if>
+            <if test="configIntroduce != null">
+                config_introduce = #{configIntroduce},
+            </if>
+            <if test="configUrlImg != null">
+                config_img_url = #{configUrlImg},
+            </if>
+            <if test="configMaxVoteCount != null">
+                config_max_vote_count = #{configMaxVoteCount},
+            </if>
+            <if test="configMinVoteCount != null">
+                config_min_vote_count = #{configMinVoteCount},
+            </if>
+            <if test="configMaxVoteLimit != null">
+                config_max_vote_limit = #{configMaxVoteLimit},
+            </if>
+            <if test="configMaxIPUseCount != null">
+                config_max_ip_use_count = #{configMaxIPUseCount}
+            </if>
+        </set>
+        <include refid="where_sql"/>
+    </update>
+
+
+</mapper>

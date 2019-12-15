@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.jxau.dbn.dao.mapper.ChooseMapper">
+    <!--    时间的resultMap-->
+    <resultMap id="BaseTimeResultMap" type="Choose">
+        <result property="lineInsertTime" column="line_insert_time" />
+        <result property="lineUpdateTime" column="line_update_time" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="Choose">
+        <id property="userId" column="user_id" />
+        <result property="userChooseTeacher" column="user_choose_teacher" />
+        <result property="userVoteCount" column="user_vote_count"/>
+        <result property="userChooseTime" column="user_choose_time" />
+        <result property="userChooseIp" column="user_choose_ip" />
+    </resultMap>
+
+    <sql id="where_sql">
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="userChooseTeacher != null">
+                AND user_choose_teacher = #{userChooseTeacher}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findById" parameterType="Choose" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_choose
+        <include refid="where_sql"/>
+    </select>
+
+    <delete id="deleteById" parameterType="Choose">
+        DELETE
+        FROM bu_choose
+        <include refid="where_sql"/>
+    </delete>
+
+
+    <insert id="insertNewData" parameterType="Choose">
+        INSERT INTO bu_choose (user_id, user_choose_teacher, user_vote_count,user_choose_time, user_choose_ip, line_insert_time,
+                               line_update_time)
+        VALUES (#{userId}, #{userChooseTeacher},#{userVoteCount}, #{userChooseTime}, #{userChooseIp}, #{lineInsertTime},
+                #{lineUpdateTime})
+    </insert>
+
+    <select id="findAllData" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_choose
+    </select>
+</mapper>
